@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
-# import requests
+import requests
 import os
 
 auth_router = APIRouter(
@@ -8,27 +8,29 @@ auth_router = APIRouter(
 )
 
 
-# GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 
-# class GoogleVerifyRequest(BaseModel):
-#     id_token: str
+class GoogleVerifyRequest(BaseModel):
+    id_token: str
 
 
-# @auth_router.post("/google-verify")
-# async def google_verify(payload: GoogleVerifyRequest):
+@auth_router.post("/google-verify")
+async def google_verify(payload: GoogleVerifyRequest):
 
-#     id_token = payload.id_token
-#     verify_endpoint = f"https://oauth2.googleapis.com/tokeninfo?id_token={id_token}"
-#     resp = requests.get(verify_endpoint)
-#     if resp.status_code != 200:
-#         raise HTTPException(status_code=400, detail="Invalid Google token")
+    id_token = payload.id_token
+    print(id_token)
 
-#     token_info = resp.json()
+    verify_endpoint = f"https://oauth2.googleapis.com/tokeninfo?id_token={id_token}"
+    resp = requests.get(verify_endpoint)
+    if resp.status_code != 200:
+        raise HTTPException(status_code=400, detail="Invalid Google token")
 
-#     if token_info["aud"] != GOOGLE_CLIENT_ID:
-#         raise HTTPException(status_code=400, detail="Token audience mismatch")
+    token_info = resp.json()
 
-#     user_email = token_info["email"]
+    if token_info["aud"] != GOOGLE_CLIENT_ID:
+        raise HTTPException(status_code=400, detail="Token audience mismatch")
 
-#     return {"access_token":  user_email, "token_type": "bearer"}
+    user_email = token_info["email"]
+
+    return {"access_token":  user_email, "token_type": "bearer"}

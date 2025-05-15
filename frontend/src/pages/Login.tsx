@@ -13,17 +13,20 @@ const ClientSideIDTokenFlow = () => {
       body: JSON.stringify({ id_token: idToken }),
     });
     const data = await res.json();
-    console.log("Server response: ", data);
+    console.log("Server response (ID Token Flow): ", data);
   };
 
+  const GOOGLE_CLIENT_ID_CLIENT_SIDE =
+    "818064127728-34agr6511gtk4gtgdfec0phqskkkptju.apps.googleusercontent.com";
+
   return (
-    <GoogleOAuthProvider clientId="818064127728-34agr6511gtk4gtgdfec0phqskkkptju.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID_CLIENT_SIDE}>
       <div>
-        <h1>ClientSide IDToken Flow</h1>
+        <h2>Client-Side ID Token Flow</h2>
         <GoogleLogin
           onSuccess={handleLoginSuccess}
           onError={() => {
-            console.log("Login Failed");
+            console.log("Login Failed (ID Token Flow)");
           }}
         />
       </div>
@@ -32,12 +35,30 @@ const ClientSideIDTokenFlow = () => {
 };
 
 const AuthorizationCodeFlow = () => {
+  const GOOGLE_CLIENT_ID_AUTH_CODE =
+    "818064127728-34agr6511gtk4gtgdfec0phqskkkptju.apps.googleusercontent.com";
+
+  const GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/auths/google-verify";
+
+  const GOOGLE_AUTH_SCOPE = "email profile openid";
+
+  const handleLoginClick = () => {
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID_AUTH_CODE}&redirect_uri=${encodeURIComponent(
+      GOOGLE_REDIRECT_URI
+    )}&response_type=code&scope=${encodeURIComponent(GOOGLE_AUTH_SCOPE)}`;
+
+    console.log("Redirecting to Google Auth URL:", googleAuthUrl);
+
+    window.location.href = googleAuthUrl;
+  };
+
   return (
     <div>
-      <h1>Authorization Code Flow</h1>
-      <p>Implement the Authorization Code Flow here.</p>
+      <h2>Authorization Code Flow</h2>
+
+      <button onClick={handleLoginClick}>Google 로그인 시작</button>
     </div>
   );
 };
 
-export { ClientSideIDTokenFlow };
+export { ClientSideIDTokenFlow, AuthorizationCodeFlow };
