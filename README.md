@@ -4,3 +4,8 @@
 <li> 이후 vsocde에서 docker 익스텐션 깔고 접속
 <li> fastapi 실행은 make run-backend
 <li> react 실행은 make run-frontend
+
+
+
+https://codepen.io/mediapipe-preview/pen/abRLMxN
+https://storage.googleapis.com/mediapipe-models
